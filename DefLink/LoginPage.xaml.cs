@@ -23,7 +23,7 @@ namespace DefLink
         public LoginPage()
         {
             InitializeComponent();
-            dbManager = new DatabaseManager("YourConnectionString"); // Укажите вашу строку подключения
+            dbManager = new DatabaseManager("Server=DESKTOP-K3IPTFJ;Database=DefLink;Trusted_Connection=True;"); // Строка подключения
         }
 
         private void LoginTextBox_GotFocus(object sender, RoutedEventArgs e)
@@ -67,17 +67,20 @@ namespace DefLink
 
             if (dbManager.CheckLogin(login, password))
             {
-                // Сохраняем состояние входа
-                Application.Current.Properties["UserId"] = login; // Сохраните ID аккаунта или другую информацию
+                int userId = dbManager.GetUserIdByLogin(login);
+                Application.Current.Properties["UserId"] = userId;
+                Application.Current.Properties["UserLogin"] = login;
 
-                // Переход на главную страницу
+                // Перейти на главную страницу
                 NavigationService.Navigate(new DashboardPage());
             }
             else
             {
-                MessageBox.Show("Неверный логин или пароль");
+                MessageBox.Show("Неверный логин или пароль.");
             }
         }
+
+
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {

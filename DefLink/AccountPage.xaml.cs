@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Navigation; // Убедитесь, что этот using существует
 
 namespace DefLink
 {
@@ -20,9 +10,21 @@ namespace DefLink
     /// </summary>
     public partial class AccountPage : Page
     {
+        private DatabaseManager dbManager;
+
         public AccountPage()
         {
             InitializeComponent();
+            dbManager = new DatabaseManager("Server=DESKTOP-K3IPTFJ;Database=DefLink;Trusted_Connection=True;");
+            this.Loaded += AccountPage_Loaded; // Подписываемся на событие Loaded
+        }
+
+        private void AccountPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (!dbManager.IsUserLoggedIn())
+            {
+                NavigationService.Navigate(new LoginPage());
+            }
         }
     }
 }

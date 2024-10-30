@@ -12,14 +12,17 @@ namespace DefLink
     using System;
     using System.Collections.Generic;
     
-    public partial class Account
+    public partial class spt_fallback_dev
     {
-        public int ID_Account { get; set; }
-        public string Login { get; set; }
-        public string Mail { get; set; }
-        public string Password { get; set; }
-        public int ID_Profile { get; set; }
-    
-        public virtual Profile Profile { get; set; }
+        public string xserver_name { get; set; }
+        public System.DateTime xdttm_ins { get; set; }
+        public System.DateTime xdttm_last_ins_upd { get; set; }
+        public Nullable<int> xfallback_low { get; set; }
+        public string xfallback_drive { get; set; }
+        public int low { get; set; }
+        public int high { get; set; }
+        public short status { get; set; }
+        public string name { get; set; }
+        public string phyname { get; set; }
     }
 }

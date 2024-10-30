@@ -3,7 +3,7 @@
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Servers">
     <Grid>
-        <TextBlock Text="Список серверов" 
+        <TextBlock Text="Настройки" 
                    HorizontalAlignment="Center" VerticalAlignment="Center" 
                    FontSize="24" Foreground="White"/>
     </Grid>

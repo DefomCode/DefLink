@@ -22,8 +22,10 @@ namespace DefLink
         public RegisterPage()
         {
             InitializeComponent();
-            dbManager = new DatabaseManager("YourConnectionString"); // Укажите вашу строку подключения
+            dbManager = new DatabaseManager("Server=DESKTOP-K3IPTFJ;Database=DefLink;Trusted_Connection=True;"); // Строка подключения
         }
+
+
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {

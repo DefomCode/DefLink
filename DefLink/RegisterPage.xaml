@@ -8,6 +8,6 @@
         <PasswordBox x:Name="RegisterPasswordTextBox" PasswordChar='*' GotFocus="RegisterPasswordTextBox_GotFocus" LostFocus="RegisterPasswordTextBox_LostFocus"/>
         <PasswordBox x:Name="ConfirmPasswordTextBox" PasswordChar='*' GotFocus="ConfirmPasswordTextBox_GotFocus" LostFocus="ConfirmPasswordTextBox_LostFocus"/>
         <Button Content="Зарегистрироваться" Click="RegisterButton_Click"/>
-        <Button Content="Назад" Click="BackButton_Click"/>
+        <Button Content="У меня уже есть аккаунт" Click="BackButton_Click"/>
     </StackPanel>
 </Page>
