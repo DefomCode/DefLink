@@ -2,7 +2,8 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="DashboardPage">
-    <Grid Background="#1e1e1e">
-        <TextBlock Text="Главная" Foreground="White" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="24"/>
+    <Grid Height="200" Width="200" Background="#1e1e1e">
+        <TextBlock Text="Главная" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="24"/>
+        <Button Content="Подключиться к VPN" Click="ConnectButton_Click" Width="60" Height="60"/>
     </Grid>
 </Page>
