@@ -71,6 +71,12 @@ namespace DefLink
                 Application.Current.Properties["UserId"] = userId;
                 Application.Current.Properties["UserLogin"] = login;
 
+                // Сохраняем состояние входа
+                Properties.Settings.Default.IsLoggedIn = true; // Убедитесь, что это свойство добавлено в Settings.settings
+                Properties.Settings.Default.UserId = userId; // Убедитесь, что это свойство добавлено в Settings.settings
+                Properties.Settings.Default.UserLogin = login; // Убедитесь, что это свойство добавлено в Settings.settings
+                Properties.Settings.Default.Save(); // Сохраняем изменения
+
                 // Перейти на главную страницу
                 NavigationService.Navigate(new DashboardPage());
             }
@@ -79,6 +85,8 @@ namespace DefLink
                 MessageBox.Show("Неверный логин или пароль.");
             }
         }
+
+
 
 
 

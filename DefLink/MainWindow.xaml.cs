@@ -31,15 +31,19 @@ namespace DefLink
 
         private void CheckUserLogin()
         {
-            if (dbManager.IsUserLoggedIn())
+            if (Properties.Settings.Default.IsLoggedIn) // Проверяем, вошел ли пользователь
             {
-                LoadDashboard();
+                // Загружаем главную страницу
+                LoadDashboard(); 
             }
             else
             {
-                ContentFrame.Navigate(new RegisterPage());
+                ContentFrame.Navigate(new RegisterPage()); // Если не вошел, переходим на страницу регистрации
             }
         }
+
+
+
 
         private void LoadDashboard()
         {
@@ -54,15 +58,20 @@ namespace DefLink
 
         private void Account_Click(object sender, RoutedEventArgs e)
         {
-            if (dbManager.IsUserLoggedIn())
+            // Проверяем, если пользователь вошел
+            if (Properties.Settings.Default.IsLoggedIn)
             {
+                // Если пользователь вошел, открываем страницу аккаунта
                 ContentFrame.Navigate(new AccountPage());
             }
             else
             {
+                // Если не вошел, открываем страницу регистрации
                 ContentFrame.Navigate(new RegisterPage());
             }
         }
+
+
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
@@ -71,8 +80,10 @@ namespace DefLink
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
+            Properties.Settings.Default.Save(); // Сохраните изменения
             Application.Current.Shutdown(); // Завершение приложения
         }
+
 
         private void HeaderGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {

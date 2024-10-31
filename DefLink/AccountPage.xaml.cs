@@ -21,10 +21,31 @@ namespace DefLink
 
         private void AccountPage_Loaded(object sender, RoutedEventArgs e)
         {
-            if (!dbManager.IsUserLoggedIn())
+            // Проверяем состояние входа по сохранённым настройкам
+            if (!Properties.Settings.Default.IsLoggedIn)
             {
                 NavigationService.Navigate(new LoginPage());
             }
         }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Очищаем данные о пользователе
+            Application.Current.Properties["UserId"] = null;
+            Application.Current.Properties["UserLogin"] = null;
+
+            // Сбрасываем состояние входа
+            Properties.Settings.Default.IsLoggedIn = false;
+            Properties.Settings.Default.UserId = 0;
+            Properties.Settings.Default.UserLogin = string.Empty;
+            Properties.Settings.Default.Save(); // Сохраняем изменения
+
+            // Перенаправляем на страницу входа
+            NavigationService.Navigate(new LoginPage());
+        }
+
+
+
+
     }
 }

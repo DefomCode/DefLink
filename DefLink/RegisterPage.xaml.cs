@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace DefLink
 {
@@ -25,19 +15,28 @@ namespace DefLink
             dbManager = new DatabaseManager("Server=DESKTOP-K3IPTFJ;Database=DefLink;Trusted_Connection=True;"); // Строка подключения
         }
 
-
-
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            string login = RegisterLoginTextBox.Text; // Используйте правильное имя
-            string email = EmailTextBox.Text; // Правильное имя
-            string password = RegisterPasswordTextBox.Password;
+            string login = RegisterLoginTextBox.Text.Trim();
+            string email = EmailTextBox.Text.Trim();
+            string password = RegisterPasswordTextBox.Password.Trim();
+            string confirmPassword = ConfirmPasswordTextBox.Password.Trim();
 
-            // Проверка паролей на совпадение
-            if (password != ConfirmPasswordTextBox.Password)
+            // Проверка на пустые поля с использованием switch
+            switch (true)
             {
-                MessageBox.Show("Пароли не совпадают.");
-                return;
+                case var _ when string.IsNullOrWhiteSpace(login) || login == "Логин":
+                    MessageBox.Show("Введите логин.");
+                    return;
+                case var _ when string.IsNullOrWhiteSpace(email) || email == "Email":
+                    MessageBox.Show("Введите email.");
+                    return;
+                case var _ when string.IsNullOrWhiteSpace(password) || password == "Пароль":
+                    MessageBox.Show("Введите пароль.");
+                    return;
+                case var _ when password != confirmPassword:
+                    MessageBox.Show("Пароли не совпадают.");
+                    return;
             }
 
             if (dbManager.RegisterUser(login, email, password))
@@ -53,7 +52,6 @@ namespace DefLink
 
         private void BackButton_Click(object sender, RoutedEventArgs e)
         {
-            // Возвращаемся на страницу входа
             NavigationService.Navigate(new LoginPage());
         }
 
@@ -62,7 +60,7 @@ namespace DefLink
             if (RegisterLoginTextBox.Text == "Логин")
             {
                 RegisterLoginTextBox.Text = "";
-                RegisterLoginTextBox.Foreground = Brushes.Black; // Цвет текста
+                RegisterLoginTextBox.Foreground = Brushes.Black;
             }
         }
 
@@ -71,7 +69,7 @@ namespace DefLink
             if (string.IsNullOrWhiteSpace(RegisterLoginTextBox.Text))
             {
                 RegisterLoginTextBox.Text = "Логин";
-                RegisterLoginTextBox.Foreground = Brushes.Gray; // Цвет заполнителя
+                RegisterLoginTextBox.Foreground = Brushes.Gray;
             }
         }
 
@@ -80,7 +78,7 @@ namespace DefLink
             if (EmailTextBox.Text == "Email")
             {
                 EmailTextBox.Text = "";
-                EmailTextBox.Foreground = Brushes.Black; // Цвет текста
+                EmailTextBox.Foreground = Brushes.Black;
             }
         }
 
@@ -89,7 +87,7 @@ namespace DefLink
             if (string.IsNullOrWhiteSpace(EmailTextBox.Text))
             {
                 EmailTextBox.Text = "Email";
-                EmailTextBox.Foreground = Brushes.Gray; // Цвет заполнителя
+                EmailTextBox.Foreground = Brushes.Gray;
             }
         }
 
@@ -97,7 +95,7 @@ namespace DefLink
         {
             if (RegisterPasswordTextBox.Password == "Пароль")
             {
-                RegisterPasswordTextBox.Clear(); // Очистка пароля
+                RegisterPasswordTextBox.Clear();
             }
         }
 
@@ -113,7 +111,7 @@ namespace DefLink
         {
             if (ConfirmPasswordTextBox.Password == "Подтвердите пароль")
             {
-                ConfirmPasswordTextBox.Clear(); // Очистка пароля
+                ConfirmPasswordTextBox.Clear();
             }
         }
 

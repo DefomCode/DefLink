@@ -3,7 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="VPN Panel" Height="700" Width="850"
         MinHeight="600" MinWidth="400" 
-        WindowStyle="ThreeDBorderWindow"  ResizeMode="CanMinimize" Background="#1e1e1e"
+        WindowStyle="None"   ResizeMode="CanMinimize" Background="#1e1e1e"
         AllowsTransparency="False">
 
     <Window.Resources>
