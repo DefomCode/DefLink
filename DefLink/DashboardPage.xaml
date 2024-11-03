@@ -4,6 +4,7 @@
       Title="DashboardPage">
     <Grid Height="200" Width="200" Background="#1e1e1e">
         <TextBlock Text="Главная" Foreground="White" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="24"/>
-        <Button Content="Подключиться к VPN" Click="ConnectButton_Click" Width="60" Height="60"/>
+        <Button Content="Подключиться к VPN" Click="ConnectToVpnButton_Click" Width="60" Height="60"/>
+        <TextBlock x:Name="ConnectionStatusText" Text="Статус: Отключено" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
     </Grid>
 </Page>

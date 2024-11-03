@@ -1,0 +1,62 @@
+{
+  "inbounds": [
+    {
+      "port": 1080,
+      "listen": "127.0.0.1",
+      "protocol": "socks",
+      "encryption": "none",
+      "settings": {
+        "auth": "noauth",
+        "encryption": "none",
+        "udp": true,
+        "ip": "127.0.0.1"
+      }
+    }
+  ],
+  "outbounds": [
+    {
+      "protocol": "vless",
+      "encryption": "none",
+      "settings": {
+        "vnext": [
+          {
+            "address": "150.241.101.254",
+            "port": 443,
+            "encryption": "none",
+            "users": [
+              {
+                "id": "",
+                "alterId": 0,
+                "security": "reality",
+                "fingerprint": "random",
+                "encryption": "none"
+              }
+            ]
+          }
+        ]
+      },
+      "streamSettings": {
+        "network": "tcp",
+        "encryption": "none",
+        "security": "reality",
+        "realitySettings": {
+          "publicKey": "ZVY-OqW59MxAZEa3r-o9Q-Riq1Q37-dDlVDqtPhjn3Y",
+          "shortId": "24bb34b3f1c0ede6",
+          "spiderX": "/",
+          "fingerprint": "random",
+          "encryption": "none"
+        }
+      }
+    }
+  ],
+  "routing": {
+    "rules": [
+      {
+        "type": "field",
+        "outboundTag": "proxy",
+        "encryption": "none",
+        "ip": [ "geoip:private" ]
+      }
+    ]
+  }
+}
