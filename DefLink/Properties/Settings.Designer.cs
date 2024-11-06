@@ -37,25 +37,145 @@ namespace DefLink.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("0")]
-        public int UserId {
+        [global::System.Configuration.DefaultSettingValueAttribute("9")]
+        public int ID_User {
             get {
-                return ((int)(this["UserId"]));
+                return ((int)(this["ID_User"]));
             }
             set {
-                this["UserId"] = value;
+                this["ID_User"] = value;
             }
         }
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
-        public string UserLogin {
+        public string Login {
             get {
-                return ((string)(this["UserLogin"]));
+                return ((string)(this["Login"]));
             }
             set {
-                this["UserLogin"] = value;
+                this["Login"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string UUID {
+            get {
+                return ((string)(this["UUID"]));
+            }
+            set {
+                this["UUID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string ServerAddress {
+            get {
+                return ((string)(this["ServerAddress"]));
+            }
+            set {
+                this["ServerAddress"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string PublicKey {
+            get {
+                return ((string)(this["PublicKey"]));
+            }
+            set {
+                this["PublicKey"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\"\"")]
+        public string Label {
+            get {
+                return ((string)(this["Label"]));
+            }
+            set {
+                this["Label"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("tcp")]
+        public string Type {
+            get {
+                return ((string)(this["Type"]));
+            }
+            set {
+                this["Type"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("reality")]
+        public string Security {
+            get {
+                return ((string)(this["Security"]));
+            }
+            set {
+                this["Security"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("random")]
+        public string Fingerprint {
+            get {
+                return ((string)(this["Fingerprint"]));
+            }
+            set {
+                this["Fingerprint"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("www.ign.com")]
+        public string SNI {
+            get {
+                return ((string)(this["SNI"]));
+            }
+            set {
+                this["SNI"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("24bb34b3f1c0ede6")]
+        public string sid {
+            get {
+                return ((string)(this["sid"]));
+            }
+            set {
+                this["sid"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%2F")]
+        public string SPX {
+            get {
+                return ((string)(this["SPX"]));
+            }
+            set {
+                this["SPX"] = value;
             }
         }
     }

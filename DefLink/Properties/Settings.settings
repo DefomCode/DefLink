@@ -5,11 +5,41 @@
     <Setting Name="IsLoggedIn" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="UserId" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="ID_User" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">9</Value>
     </Setting>
-    <Setting Name="UserLogin" Type="System.String" Scope="User">
+    <Setting Name="Login" Type="System.String" Scope="User">
       <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="UUID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="ServerAddress" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="PublicKey" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="Label" Type="System.String" Scope="User">
+      <Value Profile="(Default)">""</Value>
+    </Setting>
+    <Setting Name="Type" Type="System.String" Scope="User">
+      <Value Profile="(Default)">tcp</Value>
+    </Setting>
+    <Setting Name="Security" Type="System.String" Scope="User">
+      <Value Profile="(Default)">reality</Value>
+    </Setting>
+    <Setting Name="Fingerprint" Type="System.String" Scope="User">
+      <Value Profile="(Default)">random</Value>
+    </Setting>
+    <Setting Name="SNI" Type="System.String" Scope="User">
+      <Value Profile="(Default)">www.ign.com</Value>
+    </Setting>
+    <Setting Name="sid" Type="System.String" Scope="User">
+      <Value Profile="(Default)">24bb34b3f1c0ede6</Value>
+    </Setting>
+    <Setting Name="SPX" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%2F</Value>
     </Setting>
   </Settings>
 </SettingsFile>

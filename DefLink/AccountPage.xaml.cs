@@ -31,18 +31,23 @@ namespace DefLink
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // Очищаем данные о пользователе
-            Application.Current.Properties["UserId"] = null;
-            Application.Current.Properties["UserLogin"] = null;
+            Application.Current.Properties["ID_User"] = null;
+            Application.Current.Properties["Login"] = null;
 
-            // Сбрасываем состояние входа
+            // Сбрасываем настройки аккаунта
             Properties.Settings.Default.IsLoggedIn = false;
-            Properties.Settings.Default.UserId = 0;
-            Properties.Settings.Default.UserLogin = string.Empty;
+            Properties.Settings.Default.ID_User = 0;
+            Properties.Settings.Default.Login = string.Empty;
+            Properties.Settings.Default.UUID = string.Empty; // Очистка UUID
+            Properties.Settings.Default.ServerAddress = string.Empty; // Очистка ServerAddress
+            Properties.Settings.Default.PublicKey = string.Empty; // Очистка PublicKey
+            Properties.Settings.Default.Label = string.Empty; // Очистка Label
             Properties.Settings.Default.Save(); // Сохраняем изменения
 
             // Перенаправляем на страницу входа
             NavigationService.Navigate(new LoginPage());
         }
+
 
 
 

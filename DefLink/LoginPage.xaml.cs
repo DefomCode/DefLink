@@ -67,14 +67,14 @@ namespace DefLink
 
             if (dbManager.CheckLogin(login, password))
             {
-                int userId = dbManager.GetUserIdByLogin(login);
-                Application.Current.Properties["UserId"] = userId;
-                Application.Current.Properties["UserLogin"] = login;
+                int ID_User = dbManager.GetUserIdByLogin(login);
+                Application.Current.Properties["ID_User"] = ID_User;
+                Application.Current.Properties["Login"] = login;
 
                 // Сохраняем состояние входа
-                Properties.Settings.Default.IsLoggedIn = true; // Убедитесь, что это свойство добавлено в Settings.settings
-                Properties.Settings.Default.UserId = userId; // Убедитесь, что это свойство добавлено в Settings.settings
-                Properties.Settings.Default.UserLogin = login; // Убедитесь, что это свойство добавлено в Settings.settings
+                Properties.Settings.Default.IsLoggedIn = true; 
+                Properties.Settings.Default.ID_User = ID_User;
+                Properties.Settings.Default.Login = login;
                 Properties.Settings.Default.Save(); // Сохраняем изменения
 
                 // Перейти на главную страницу
@@ -85,6 +85,7 @@ namespace DefLink
                 MessageBox.Show("Неверный логин или пароль.");
             }
         }
+
 
 
 

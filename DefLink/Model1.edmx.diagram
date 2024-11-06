@@ -4,13 +4,13 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="755726ef803743d79c9d2d3c74d82422" Name="Diagram1">
-        <EntityTypeShape EntityType="masterModel.MSreplication_options" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.spt_fallback_db" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.spt_fallback_dev" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.spt_fallback_usg" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.spt_monitor" Width="1.5" PointX="2.75" PointY="4.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="masterModel.spt_values" Width="1.5" PointX="4.75" PointY="4.75" IsExpanded="true" />
+      <Diagram DiagramId="4e6bb30cd9494f6f896356bdfdd0b637" Name="Diagram1">
+        <EntityTypeShape EntityType="DefLinkModel.Subscription" Width="1.5" PointX="3" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DefLinkModel.sysdiagrams" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DefLinkModel.User" Width="1.5" PointX="0.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DefLinkModel.VPN" Width="1.5" PointX="5.25" PointY="1" IsExpanded="true" />
+        <AssociationConnector Association="DefLinkModel.FK_Subscription_User" ManuallyRouted="false" />
+        <AssociationConnector Association="DefLinkModel.FK_VPN_Subscription" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

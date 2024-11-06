@@ -10,19 +10,13 @@
 namespace DefLink
 {
     using System;
-    using System.Collections.Generic;
     
-    public partial class spt_fallback_dev
+    public partial class sp_helpdiagrams_Result
     {
-        public string xserver_name { get; set; }
-        public System.DateTime xdttm_ins { get; set; }
-        public System.DateTime xdttm_last_ins_upd { get; set; }
-        public Nullable<int> xfallback_low { get; set; }
-        public string xfallback_drive { get; set; }
-        public int low { get; set; }
-        public int high { get; set; }
-        public short status { get; set; }
-        public string name { get; set; }
-        public string phyname { get; set; }
+        public string Database { get; set; }
+        public string Name { get; set; }
+        public int ID { get; set; }
+        public string Owner { get; set; }
+        public int OwnerID { get; set; }
     }
 }

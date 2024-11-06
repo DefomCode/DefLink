@@ -16,116 +16,128 @@ namespace DefLink
         {
             InitializeComponent();
             // Обновление конфигурации при инициализации страницы
-            var profile = GetVpnProfile();
-            UpdateConfigFile(profile);
-
+            var ID_User = GetCurrentUserId(); // Получаем ID текущего пользователя
+            var profile = GetVpnProfile(ID_User); // Получаем профиль для текущего пользователя
+            UpdateConfigFile(profile); // Обновляем конфигурацию
         }
 
-        private VpnProfile GetVpnProfile()
+        // Метод для получения ID текущего пользователя (например, из базы данных или текущей сессии)
+        private string GetCurrentUserId()
         {
-            // Здесь можно получить данные из базы данных и передать их в объект VpnProfile
+            // Возвращаем пример ID пользователя
+            // Реализуйте этот метод по вашему усмотрению (например, извлекая ID из базы данных или сессии)
+            return "exampleID_User";
+        }
+
+        // Получаем профиль для пользователя по его ID
+        private VpnProfile GetVpnProfile(string ID_User)
+        {
+            // Реализуйте логику для получения профиля по ID_User 
+            // Пример возврата объекта с нужными данными
             return new VpnProfile
             {
-                Id = "469e3ad3-cb41-415e-bff6-0604436e89fe", // Обновлённый Id
-                Address = "150.241.101.254", // Обновлённый адрес
-                Port = 443, // Порт остаётся 443
-                Security = "reality" // Метод безопасности
+                UUID = "some-uuid",  // Замените на актуальные данные
+                Label = "MyProfile",
+                ServerAdress = "127.0.0.1", // Укажите адрес сервера
+                PublicKey = "public-key" // Укажите публичный ключ
             };
         }
 
+        // Метод для обновления конфигурационного файла
         private void UpdateConfigFile(VpnProfile profile)
         {
             var config = new
             {
                 inbounds = new[] // Обратите внимание, что здесь можно добавить свои настройки
                 {
-            new
-            {
-                port = 443,
-                listen = "0.0.0.0",
-                protocol = "vless",
-                settings = new
-                {
-                    clients = new[]
+                    new
                     {
-                        new
+                        port = 443,
+                        listen = "0.0.0.0",
+                        protocol = "vless",
+                        settings = new
                         {
-                            id = profile.Id,
-                            level = 0,
-                            email = "user@example.com"
+                            clients = new[] { new { id = profile.UUID, level = 0, email = "user@example.com", label = profile.Label } }
                         }
                     }
-                }
-            }
-        },
-                outbounds = new[]
-                {
-            new
-            {
-                protocol = "vless", // Здесь важно, чтобы вы использовали vless
-                settings = new
-                {
-                    vnext = new[]
+                },
+                outbounds = new[] {
+                    new
                     {
-                        new
+                        protocol = "vless",
+                        settings = new
                         {
-                            address = profile.Address,
-                            port = 443,
-                            users = new[]
-                            {
+                            vnext = new[] {
                                 new
                                 {
-                                    id = profile.Id,
-                                    alterId = 0,
-                                    security = profile.Security,
-                                    fingerprint = "random"
+                                    address = profile.ServerAdress,
+                                    port = 443, // Можно добавить динамическую настройку порта
+                                    users = new[] {
+                                        new {
+                                            id = profile.UUID,
+                                            alterId = 0,
+                                            security = profile.PublicKey,
+                                            fingerprint = "random"
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            }
-        },
+                },
                 routing = new
                 {
-                    rules = new[]
-                    {
-                new { type = "field", outboundTag = "proxy", ip = new[] { "geoip:private" } }
-            }
+                    rules = new[] { new { type = "field", outboundTag = "proxy", ip = new[] { "geoip:private" } } }
                 }
             };
 
             string json = Newtonsoft.Json.JsonConvert.SerializeObject(config, Newtonsoft.Json.Formatting.Indented);
 
+            // Путь для записи конфигурации
+            string xrayDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray");
+            if (!System.IO.Directory.Exists(xrayDirectory)) // Проверяем, существует ли папка
+            {
+                System.IO.Directory.CreateDirectory(xrayDirectory); // Создаем папку, если она не существует
+            }
+
+            string configFilePath = System.IO.Path.Combine(xrayDirectory, "config.json");
+            System.IO.File.WriteAllText(configFilePath, json); // Запись конфигурации в файл
+
             // Вывод для отладки
             Console.WriteLine("Запись конфигурации в файл:");
             Console.WriteLine(json);
-
-            System.IO.File.WriteAllText("xray/config.json", json); // ПРОБЛЕМНАЯ ЧАСТЬ КОДА ТУТ!!!! ОШИБКА И БЛАБЛА
-
         }
 
-
+        // Обработчик для подключения и отключения VPN
         private async void ConnectToVpnButton_Click(object sender, RoutedEventArgs e)
         {
-            await Task.Delay(1000); // Задержка перед выполнением
+            // Получаем ID текущего пользователя
+            var ID_User = GetCurrentUserId();
 
-            var profile = GetVpnProfile();
+            // Получаем профиль для текущего пользователя
+            var profile = GetVpnProfile(ID_User);
             UpdateConfigFile(profile); // Обновляем конфигурацию перед подключением
 
             // Путь к xray.exe и config.json
             string xrayPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "xray.exe");
             string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "config.json");
 
-
             if (!isConnected)
             {
                 try
                 {
+                    // Проверяем, существует ли файл xray.exe
+                    if (!System.IO.File.Exists(xrayPath))
+                    {
+                        HandleConnectionError($"Не найден файл xray.exe по пути: {xrayPath}");
+                        return;
+                    }
+
+                    // Запуск процесса xray
                     xrayProcess = Process.Start(new ProcessStartInfo
                     {
                         FileName = xrayPath,
-                        Arguments = $"-config \"{configPath}\"",
+                        Arguments = $"-config \"{configPath}\"", // Указываем конфиг для запуска
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -142,15 +154,16 @@ namespace DefLink
                         ConnectionStatusText.Text = "Статус: Подключено";
                         ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Green);
 
-                        // Обработка ошибок
+                        // Логирование ошибок
                         xrayProcess.ErrorDataReceived += (s, errorEventArgs) =>
                         {
                             if (!string.IsNullOrEmpty(errorEventArgs.Data))
                             {
-                                // Логирование ошибок или вывод информации о процессе
+                                // Логирование ошибок
                                 Console.WriteLine(errorEventArgs.Data);
                             }
                         };
+
                         xrayProcess.BeginErrorReadLine(); // Начинаем чтение ошибок
                     }
                     else
@@ -171,7 +184,7 @@ namespace DefLink
                     if (xrayProcess != null && !xrayProcess.HasExited)
                     {
                         xrayProcess.Kill(); // Завершаем процесс
-                        xrayProcess.WaitForExit(); // Ждём завершения
+                        xrayProcess.WaitForExit(); // Ждем завершения
                         xrayProcess.Dispose(); // Освобождаем ресурсы
                     }
 
@@ -187,14 +200,16 @@ namespace DefLink
             }
         }
 
+        // Метод для обработки ошибок подключения
         private void HandleConnectionError(string message)
         {
             ConnectionStatusText.Text = "Статус: Ошибка подключения";
             ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Red);
             MessageBox.Show(message);
+            Console.WriteLine(message); // Добавление вывода ошибки в консоль
         }
 
-        // Метод для перезапуска сетевого адаптера, чтобы восстановить подключение
+        // Метод для перезапуска сетевого адаптера
         private void ResetNetworkAdapter()
         {
             Process.Start(new ProcessStartInfo
@@ -207,6 +222,5 @@ namespace DefLink
                 UseShellExecute = false
             }).WaitForExit();
         }
-
     }
 }

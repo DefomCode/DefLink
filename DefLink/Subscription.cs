@@ -12,13 +12,20 @@ namespace DefLink
     using System;
     using System.Collections.Generic;
     
-    public partial class spt_values
+    public partial class Subscription
     {
-        public string name { get; set; }
-        public int number { get; set; }
-        public string type { get; set; }
-        public Nullable<int> low { get; set; }
-        public Nullable<int> high { get; set; }
-        public Nullable<int> status { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public Subscription()
+        {
+            this.VPN = new HashSet<VPN>();
+        }
+    
+        public int ID_Subscription { get; set; }
+        public int ID_User { get; set; }
+        public int Sub_Level { get; set; }
+    
+        public virtual User User { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<VPN> VPN { get; set; }
     }
 }

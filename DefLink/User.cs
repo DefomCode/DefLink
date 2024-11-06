@@ -12,18 +12,20 @@ namespace DefLink
     using System;
     using System.Collections.Generic;
     
-    public partial class spt_monitor
+    public partial class User
     {
-        public System.DateTime lastrun { get; set; }
-        public int cpu_busy { get; set; }
-        public int io_busy { get; set; }
-        public int idle { get; set; }
-        public int pack_received { get; set; }
-        public int pack_sent { get; set; }
-        public int connections { get; set; }
-        public int pack_errors { get; set; }
-        public int total_read { get; set; }
-        public int total_write { get; set; }
-        public int total_errors { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
+        public User()
+        {
+            this.Subscription = new HashSet<Subscription>();
+        }
+    
+        public int ID_User { get; set; }
+        public string Login { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; }
+    
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Subscription> Subscription { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
@@ -14,10 +13,9 @@ namespace DefLink
         {
             InitializeComponent();
             dbManager = new DatabaseManager("Server=DESKTOP-K3IPTFJ;Database=DefLink;Trusted_Connection=True;");
-            CheckUserLogin(); // Проверка авторизации
+            CheckLogin(); // Проверка авторизации
             this.Icon = new BitmapImage(new Uri("pack://application:,,,/Images/DefLink.ico"));
             this.StateChanged += MainWindow_StateChanged;
-
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)
@@ -29,13 +27,15 @@ namespace DefLink
             }
         }
 
-
-        private void CheckUserLogin()
+        private void CheckLogin()
         {
             if (Properties.Settings.Default.IsLoggedIn) // Проверяем, вошел ли пользователь
             {
+                // Обновляем данные пользователя при запуске
+                UpdateUserSettings();
+
                 // Загружаем главную страницу
-                LoadDashboard(); 
+                LoadDashboard();
             }
             else
             {
@@ -43,8 +43,25 @@ namespace DefLink
             }
         }
 
+        // Новый метод для обновления данных пользователя
+        private void UpdateUserSettings()
+        {
+            int ID_User = Properties.Settings.Default.ID_User; // Получаем ID пользователя из настроек
 
+            // Запрашиваем данные пользователя из базы данных
+            var userData = dbManager.GetUserDataById(ID_User);
 
+            // Обновляем данные пользователя в настройках
+            Properties.Settings.Default.ID_User = userData.ID_User;
+            Properties.Settings.Default.Login = userData.Login;
+            Properties.Settings.Default.UUID = userData.UUID;
+            Properties.Settings.Default.ServerAddress = userData.ServerAddress;
+            Properties.Settings.Default.PublicKey = userData.PublicKey;
+            Properties.Settings.Default.Label = userData.Label;
+
+            // Сохраняем изменения в настройках
+            Properties.Settings.Default.Save();
+        }
 
         private void LoadDashboard()
         {
@@ -72,8 +89,6 @@ namespace DefLink
             }
         }
 
-
-
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
             this.WindowState = WindowState.Minimized; // Минимизируем окно без анимации
@@ -81,10 +96,10 @@ namespace DefLink
 
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
+            // Сохранение всех настроек, включая данные аккаунта
             Properties.Settings.Default.Save(); // Сохраните изменения
             Application.Current.Shutdown(); // Завершение приложения
         }
-
 
         private void HeaderGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -93,6 +108,5 @@ namespace DefLink
                 this.DragMove(); // Движение окна
             }
         }
-
     }
 }

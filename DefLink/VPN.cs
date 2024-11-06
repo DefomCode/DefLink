@@ -12,16 +12,15 @@ namespace DefLink
     using System;
     using System.Collections.Generic;
     
-    public partial class spt_fallback_usg
+    public partial class VPN
     {
-        public string xserver_name { get; set; }
-        public System.DateTime xdttm_ins { get; set; }
-        public System.DateTime xdttm_last_ins_upd { get; set; }
-        public Nullable<int> xfallback_vstart { get; set; }
-        public short dbid { get; set; }
-        public int segmap { get; set; }
-        public int lstart { get; set; }
-        public int sizepg { get; set; }
-        public int vstart { get; set; }
+        public int ID_VPN { get; set; }
+        public Nullable<int> ID_Subscription { get; set; }
+        public string UUID { get; set; }
+        public string ServerAddress { get; set; }
+        public string PublicKey { get; set; }
+        public string Label { get; set; }
+    
+        public virtual Subscription Subscription { get; set; }
     }
 }
