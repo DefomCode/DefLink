@@ -16,6 +16,19 @@ namespace DefLink
             CheckLogin(); // Проверка авторизации
             this.Icon = new BitmapImage(new Uri("pack://application:,,,/Images/DefLink.ico"));
             this.StateChanged += MainWindow_StateChanged;
+
+            // Проверка, если пользователь авторизован
+            if (Properties.Settings.Default.IsLoggedIn)
+            {
+                // Получение данных пользователя
+                string uuid = Properties.Settings.Default.UUID;
+                string serverAddress = Properties.Settings.Default.ServerAddress;
+                string publicKey = Properties.Settings.Default.PublicKey;
+                string label = Properties.Settings.Default.Label;
+
+                // Обновляем конфигурацию с полученными данными
+                ConfigGenerator.UpdateConfig(uuid, serverAddress, publicKey, label);
+            }
         }
 
         private void MainWindow_StateChanged(object sender, EventArgs e)

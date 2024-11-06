@@ -3,7 +3,8 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Threading.Tasks; // Не забудьте добавить этот using, если его еще нет
+using System.Threading.Tasks;
+using Newtonsoft.Json; // Добавьте для работы с JSON
 
 namespace DefLink
 {
@@ -15,41 +16,27 @@ namespace DefLink
         public DashboardPage()
         {
             InitializeComponent();
-            // Обновление конфигурации при инициализации страницы
-            var ID_User = GetCurrentUserId(); // Получаем ID текущего пользователя
-            var profile = GetVpnProfile(ID_User); // Получаем профиль для текущего пользователя
-            UpdateConfigFile(profile); // Обновляем конфигурацию
-        }
 
-        // Метод для получения ID текущего пользователя (например, из базы данных или текущей сессии)
-        private string GetCurrentUserId()
-        {
-            // Возвращаем пример ID пользователя
-            // Реализуйте этот метод по вашему усмотрению (например, извлекая ID из базы данных или сессии)
-            return "exampleID_User";
-        }
-
-        // Получаем профиль для пользователя по его ID
-        private VpnProfile GetVpnProfile(string ID_User)
-        {
-            // Реализуйте логику для получения профиля по ID_User 
-            // Пример возврата объекта с нужными данными
-            return new VpnProfile
+            // Проверка, если пользователь авторизован
+            if (Properties.Settings.Default.IsLoggedIn)
             {
-                UUID = "some-uuid",  // Замените на актуальные данные
-                Label = "MyProfile",
-                ServerAdress = "127.0.0.1", // Укажите адрес сервера
-                PublicKey = "public-key" // Укажите публичный ключ
-            };
+                // Получаем данные пользователя из настроек
+                string uuid = Properties.Settings.Default.UUID;
+                string serverAddress = Properties.Settings.Default.ServerAddress;
+                string publicKey = Properties.Settings.Default.PublicKey;
+                string label = Properties.Settings.Default.Label;
+
+                // Обновляем конфигурацию с полученными данными
+                UpdateConfig(uuid, serverAddress, publicKey, label);
+            }
         }
 
-        // Метод для обновления конфигурационного файла
-        private void UpdateConfigFile(VpnProfile profile)
+        // Метод для обновления конфигурации
+        private void UpdateConfig(string uuid, string serverAddress, string publicKey, string label)
         {
             var config = new
             {
-                inbounds = new[] // Обратите внимание, что здесь можно добавить свои настройки
-                {
+                inbounds = new[] {
                     new
                     {
                         port = 443,
@@ -57,7 +44,9 @@ namespace DefLink
                         protocol = "vless",
                         settings = new
                         {
-                            clients = new[] { new { id = profile.UUID, level = 0, email = "user@example.com", label = profile.Label } }
+                            clients = new[] {
+                                new { id = uuid, level = 0, email = "user@example.com", label = label }
+                            }
                         }
                     }
                 },
@@ -70,13 +59,13 @@ namespace DefLink
                             vnext = new[] {
                                 new
                                 {
-                                    address = profile.ServerAdress,
-                                    port = 443, // Можно добавить динамическую настройку порта
+                                    address = serverAddress,
+                                    port = 443,
                                     users = new[] {
                                         new {
-                                            id = profile.UUID,
+                                            id = uuid,
                                             alterId = 0,
-                                            security = profile.PublicKey,
+                                            security = publicKey,
                                             fingerprint = "random"
                                         }
                                     }
@@ -87,17 +76,19 @@ namespace DefLink
                 },
                 routing = new
                 {
-                    rules = new[] { new { type = "field", outboundTag = "proxy", ip = new[] { "geoip:private" } } }
+                    rules = new[] {
+                        new { type = "field", outboundTag = "proxy", ip = new[] { "geoip:private" } }
+                    }
                 }
             };
 
-            string json = Newtonsoft.Json.JsonConvert.SerializeObject(config, Newtonsoft.Json.Formatting.Indented);
+            string json = JsonConvert.SerializeObject(config, Formatting.Indented);
 
             // Путь для записи конфигурации
             string xrayDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray");
-            if (!System.IO.Directory.Exists(xrayDirectory)) // Проверяем, существует ли папка
+            if (!System.IO.Directory.Exists(xrayDirectory))
             {
-                System.IO.Directory.CreateDirectory(xrayDirectory); // Создаем папку, если она не существует
+                System.IO.Directory.CreateDirectory(xrayDirectory);
             }
 
             string configFilePath = System.IO.Path.Combine(xrayDirectory, "config.json");
@@ -111,19 +102,21 @@ namespace DefLink
         // Обработчик для подключения и отключения VPN
         private async void ConnectToVpnButton_Click(object sender, RoutedEventArgs e)
         {
-            // Получаем ID текущего пользователя
-            var ID_User = GetCurrentUserId();
-
-            // Получаем профиль для текущего пользователя
-            var profile = GetVpnProfile(ID_User);
-            UpdateConfigFile(profile); // Обновляем конфигурацию перед подключением
-
-            // Путь к xray.exe и config.json
-            string xrayPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "xray.exe");
-            string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "config.json");
-
             if (!isConnected)
             {
+                // Получаем данные для конфигурации
+                string uuid = Properties.Settings.Default.UUID;
+                string serverAddress = Properties.Settings.Default.ServerAddress;
+                string publicKey = Properties.Settings.Default.PublicKey;
+                string label = Properties.Settings.Default.Label;
+
+                // Обновляем конфигурацию перед подключением
+                UpdateConfig(uuid, serverAddress, publicKey, label);
+
+                // Путь к xray.exe и config.json
+                string xrayPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "xray.exe");
+                string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "config.json");
+
                 try
                 {
                     // Проверяем, существует ли файл xray.exe
