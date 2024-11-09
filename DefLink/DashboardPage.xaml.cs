@@ -188,7 +188,7 @@ namespace DefLink
             {
                 try
                 {
-                    if (xrayProcess != null && !xrayProcess.HasExited)
+                    if (xrayProcess != null && !xrayProcess.HasExited) 
                     {
                         xrayProcess.Kill();
                         xrayProcess.WaitForExit();
