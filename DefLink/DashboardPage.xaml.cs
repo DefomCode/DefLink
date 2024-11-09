@@ -25,28 +25,37 @@ namespace DefLink
                 string serverAddress = Properties.Settings.Default.ServerAddress;
                 string publicKey = Properties.Settings.Default.PublicKey;
                 string label = Properties.Settings.Default.Label;
+                string sid = Properties.Settings.Default.sid;
 
                 // Обновляем конфигурацию с полученными данными
-                UpdateConfig(uuid, serverAddress, publicKey, label);
+                UpdateConfig(uuid, serverAddress, publicKey, label, sid);
             }
         }
 
         // Метод для обновления конфигурации
-        private void UpdateConfig(string uuid, string serverAddress, string publicKey, string label)
+        private void UpdateConfig(string uuid, string serverAddress, string publicKey, string label, string sid)
         {
             var config = new
             {
+                log = new
+                {
+                    loglevel = "debug" // Уровень логирования
+                },
                 inbounds = new[] {
                     new
                     {
-                        port = 443,
-                        listen = "0.0.0.0",
-                        protocol = "vless",
+                        port = 1080,
+                        listen = "127.0.0.1",
+                        protocol = "socks",
                         settings = new
                         {
-                            clients = new[] {
-                                new { id = uuid, level = 0, email = "user@example.com", label = label }
-                            }
+                            udp = true
+                        },
+                        sniffing = new
+                        {
+                            enabled = true,
+                            destOverride = new[] { "http", "tls", "quic" },
+                            routeOnly = true
                         }
                     }
                 },
@@ -62,29 +71,35 @@ namespace DefLink
                                     address = serverAddress,
                                     port = 443,
                                     users = new[] {
-                                        new {
+                                        new
+                                        {
                                             id = uuid,
-                                            alterId = 0,
-                                            security = publicKey,
-                                            fingerprint = "random"
+                                            encryption = "none"
                                         }
                                     }
                                 }
                             }
-                        }
-                    }
-                },
-                routing = new
-                {
-                    rules = new[] {
-                        new { type = "field", outboundTag = "proxy", ip = new[] { "geoip:private" } }
+                        },
+                        streamSettings = new
+                        {
+                            network = "tcp",
+                            security = "reality",
+                            realitySettings = new
+                            {
+                                fingerprint = "random", // Пример фингерпринта
+                                serverName = "www.ign.com", // Имя сервера
+                                publicKey = publicKey, // Публичный ключ
+                                spiderX = "/", // Пример spiderX
+                                shortId = sid
+                            }
+                        },
+                        tag = "proxy"
                     }
                 }
             };
 
             string json = JsonConvert.SerializeObject(config, Formatting.Indented);
 
-            // Путь для записи конфигурации
             string xrayDirectory = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray");
             if (!System.IO.Directory.Exists(xrayDirectory))
             {
@@ -93,8 +108,6 @@ namespace DefLink
 
             string configFilePath = System.IO.Path.Combine(xrayDirectory, "config.json");
             System.IO.File.WriteAllText(configFilePath, json); // Запись конфигурации в файл
-
-            // Вывод для отладки
             Console.WriteLine("Запись конфигурации в файл:");
             Console.WriteLine(json);
         }
@@ -104,103 +117,108 @@ namespace DefLink
         {
             if (!isConnected)
             {
-                // Получаем данные для конфигурации
-                string uuid = Properties.Settings.Default.UUID;
-                string serverAddress = Properties.Settings.Default.ServerAddress;
-                string publicKey = Properties.Settings.Default.PublicKey;
-                string label = Properties.Settings.Default.Label;
-
-                // Обновляем конфигурацию перед подключением
-                UpdateConfig(uuid, serverAddress, publicKey, label);
-
-                // Путь к xray.exe и config.json
                 string xrayPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "xray.exe");
                 string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "config.json");
 
                 try
                 {
-                    // Проверяем, существует ли файл xray.exe
                     if (!System.IO.File.Exists(xrayPath))
                     {
-                        HandleConnectionError($"Не найден файл xray.exe по пути: {xrayPath}");
+                        await HandleConnectionErrorAsync($"Не найден файл xray.exe по пути: {xrayPath}");
                         return;
                     }
 
-                    // Запуск процесса xray
-                    xrayProcess = Process.Start(new ProcessStartInfo
+                    var startInfo = new ProcessStartInfo
                     {
                         FileName = xrayPath,
-                        Arguments = $"-config \"{configPath}\"", // Указываем конфиг для запуска
+                        Arguments = $"-config \"{configPath}\"",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
                         CreateNoWindow = true
-                    });
+                    };
 
-                    // Ждем некоторое время для запуска процесса
-                    await Task.Delay(2000);
+                    xrayProcess = new Process { StartInfo = startInfo };
 
-                    // Проверяем, запущен ли процесс
+                    // Подписка на события для асинхронного чтения StandardOutput и StandardError
+                    var outputTask = new TaskCompletionSource<string>();
+                    var errorTask = new TaskCompletionSource<string>();
+
+                    xrayProcess.OutputDataReceived += (s, outputEventArgs) =>
+                    {
+                        if (outputEventArgs.Data != null)
+                            Console.WriteLine("Output: " + outputEventArgs.Data);
+                        else
+                            outputTask.TrySetResult(null); // Завершение потока вывода
+                    };
+
+                    xrayProcess.ErrorDataReceived += (s, errorEventArgs) =>
+                    {
+                        if (errorEventArgs.Data != null)
+                            Console.WriteLine("Error: " + errorEventArgs.Data);
+                        else
+                            errorTask.TrySetResult(null); // Завершение потока ошибок
+                    };
+
+                    xrayProcess.Start();
+                    xrayProcess.BeginOutputReadLine();
+                    xrayProcess.BeginErrorReadLine();
+
+                    await Task.WhenAll(outputTask.Task, errorTask.Task).ConfigureAwait(false); // Ожидание завершения обоих потоков
+
+                    await Task.Delay(2000); // Задержка для старта процесса
+
                     if (xrayProcess != null && !xrayProcess.HasExited)
                     {
                         isConnected = true;
                         ConnectionStatusText.Text = "Статус: Подключено";
                         ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Green);
-
-                        // Логирование ошибок
-                        xrayProcess.ErrorDataReceived += (s, errorEventArgs) =>
-                        {
-                            if (!string.IsNullOrEmpty(errorEventArgs.Data))
-                            {
-                                // Логирование ошибок
-                                Console.WriteLine(errorEventArgs.Data);
-                            }
-                        };
-
-                        xrayProcess.BeginErrorReadLine(); // Начинаем чтение ошибок
                     }
                     else
                     {
-                        HandleConnectionError("Процесс VPN не смог запуститься.");
+                        await HandleConnectionErrorAsync("Процесс VPN не смог запуститься.");
                     }
                 }
                 catch (Exception ex)
                 {
-                    HandleConnectionError($"Не удалось подключиться к VPN: {ex.Message}");
+                    await HandleConnectionErrorAsync($"Не удалось подключиться к VPN: {ex.Message}");
                 }
             }
             else
             {
-                // Отключаемся
                 try
                 {
                     if (xrayProcess != null && !xrayProcess.HasExited)
                     {
-                        xrayProcess.Kill(); // Завершаем процесс
-                        xrayProcess.WaitForExit(); // Ждем завершения
-                        xrayProcess.Dispose(); // Освобождаем ресурсы
+                        xrayProcess.Kill();
+                        xrayProcess.WaitForExit();
+                        xrayProcess.Dispose();
                     }
 
                     isConnected = false;
                     ConnectionStatusText.Text = "Статус: Отключено";
                     ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Gray);
-                    ResetNetworkAdapter(); // Пробуем перезагрузить сетевой интерфейс
+                    ResetNetworkAdapter();
                 }
                 catch (Exception ex)
                 {
-                    HandleConnectionError($"Не удалось отключиться от VPN: {ex.Message}");
+                   await HandleConnectionErrorAsync($"Не удалось отключиться от VPN: {ex.Message}");
                 }
             }
         }
 
-        // Метод для обработки ошибок подключения
-        private void HandleConnectionError(string message)
+        // Асинхронный метод для обработки ошибок подключения
+        private async Task HandleConnectionErrorAsync(string message)
         {
-            ConnectionStatusText.Text = "Статус: Ошибка подключения";
-            ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Red);
-            MessageBox.Show(message);
-            Console.WriteLine(message); // Добавление вывода ошибки в консоль
+            await Dispatcher.InvokeAsync(() =>
+            {
+                ConnectionStatusText.Text = "Статус: Ошибка подключения";
+                ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Red);
+                MessageBox.Show(message);
+            });
+            Console.WriteLine(message); // Вывод ошибки в консоль
         }
+
 
         // Метод для перезапуска сетевого адаптера
         private void ResetNetworkAdapter()
