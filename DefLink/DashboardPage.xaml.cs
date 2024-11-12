@@ -44,7 +44,7 @@ namespace DefLink
                 inbounds = new[] {
                     new
                     {
-                        port = 1080,
+                        port = 10808,
                         listen = "127.0.0.1",
                         protocol = "socks",
                         settings = new
@@ -117,7 +117,7 @@ namespace DefLink
         {
             if (!isConnected)
             {
-                string xrayPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "xray.exe");
+                var xrayPath = @"xray/xray.exe"; //System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "xray.exe");
                 string configPath = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "xray", "config.json");
 
                 try
@@ -131,7 +131,7 @@ namespace DefLink
                     var startInfo = new ProcessStartInfo
                     {
                         FileName = xrayPath,
-                        Arguments = $"-config \"{configPath}\"",
+                        Arguments = "run",
                         UseShellExecute = false,
                         RedirectStandardOutput = true,
                         RedirectStandardError = true,
@@ -164,15 +164,15 @@ namespace DefLink
                     xrayProcess.BeginOutputReadLine();
                     xrayProcess.BeginErrorReadLine();
 
-                    await Task.WhenAll(outputTask.Task, errorTask.Task).ConfigureAwait(false); // Ожидание завершения обоих потоков
+                    ConnectionStatusText.Text = "Статус: Подключение...";
+                    ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Yellow);
 
-                    await Task.Delay(2000); // Задержка для старта процесса
-
-                    if (xrayProcess != null && !xrayProcess.HasExited)
+                    if (!xrayProcess.HasExited)
                     {
+                        Console.WriteLine("Выполнено!");
                         isConnected = true;
                         ConnectionStatusText.Text = "Статус: Подключено";
-                        ConnectionStatusText.Foreground = new SolidColorBrush(Colors.Green);
+                        ConnectionStatusText.Foreground = new SolidColorBrush(Colors.LightGreen);
                     }
                     else
                     {
