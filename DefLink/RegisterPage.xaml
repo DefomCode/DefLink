@@ -2,12 +2,14 @@
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="RegisterPage">
-    <StackPanel Margin="20">
-        <TextBox x:Name="RegisterLoginTextBox" Text="Логин" GotFocus="RegisterLoginTextBox_GotFocus" LostFocus="RegisterLoginTextBox_LostFocus" Foreground="Gray"/>
-        <TextBox x:Name="EmailTextBox" Text="Email" GotFocus="EmailTextBox_GotFocus" LostFocus="EmailTextBox_LostFocus" Foreground="Gray"/>
-        <PasswordBox x:Name="RegisterPasswordTextBox" PasswordChar='*' GotFocus="RegisterPasswordTextBox_GotFocus" LostFocus="RegisterPasswordTextBox_LostFocus"/>
-        <PasswordBox x:Name="ConfirmPasswordTextBox" PasswordChar='*' GotFocus="ConfirmPasswordTextBox_GotFocus" LostFocus="ConfirmPasswordTextBox_LostFocus"/>
-        <Button Content="Зарегистрироваться" Click="RegisterButton_Click"/>
-        <Button Content="У меня уже есть аккаунт" Click="BackButton_Click"/>
-    </StackPanel>
+    <Grid Height="660" Width="640" Background="#F9F9F9">
+        <StackPanel Margin="20">
+            <TextBox x:Name="RegisterLoginTextBox" Text="Логин" GotFocus="RegisterLoginTextBox_GotFocus" LostFocus="RegisterLoginTextBox_LostFocus" Foreground="Gray"/>
+            <TextBox x:Name="EmailTextBox" Text="Email" GotFocus="EmailTextBox_GotFocus" LostFocus="EmailTextBox_LostFocus" Foreground="Gray"/>
+            <PasswordBox x:Name="RegisterPasswordTextBox" PasswordChar='*' GotFocus="RegisterPasswordTextBox_GotFocus" LostFocus="RegisterPasswordTextBox_LostFocus"/>
+            <PasswordBox x:Name="ConfirmPasswordTextBox" PasswordChar='*' GotFocus="ConfirmPasswordTextBox_GotFocus" LostFocus="ConfirmPasswordTextBox_LostFocus"/>
+            <Button Content="Зарегистрироваться" Click="RegisterButton_Click"/>
+            <Button Content="У меня уже есть аккаунт" Click="BackButton_Click"/>
+        </StackPanel>
+    </Grid>
 </Page>

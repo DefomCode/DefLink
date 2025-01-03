@@ -1,19 +1,18 @@
 ﻿<Window x:Class="DefLink.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="VPN Panel" Height="700" Width="850"
-        MinHeight="600" MinWidth="400" 
-        WindowStyle="None"   ResizeMode="CanMinimize" Background="#1e1e1e"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        Title="VPN Panel" Height="700" Width="853"
+        MinHeight="600" MinWidth="400" WindowStyle="None" ResizeMode="CanMinimize" Background="Transparent"
         AllowsTransparency="False">
 
     <Window.Resources>
-        <!-- Определение стиля для кнопок навигации -->
         <Style x:Key="NavButtonStyle" TargetType="Button">
-            <Setter Property="Background" Value="#3A3A3A"/>
-            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="#F4F4F4"/>
+            <Setter Property="Foreground" Value="#0056B3"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Margin" Value="5"/>
-            <Setter Property="BorderBrush" Value="#4A4A4A"/>
+            <Setter Property="BorderBrush" Value="#0056B3"/>
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="FontSize" Value="16"/>
@@ -27,7 +26,7 @@
                                 BorderBrush="{TemplateBinding BorderBrush}" 
                                 BorderThickness="{TemplateBinding BorderThickness}" 
                                 CornerRadius="10">
-                            <ContentPresenter HorizontalAlignment="Center" 
+                            <ContentPresenter HorizontalAlignment="Left" 
                                               VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>
@@ -35,8 +34,11 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#2A2A2A"/>
-                    <Setter Property="Foreground" Value="#E0E0E0"/>
+                    <Setter Property="Background">
+                        <Setter.Value>
+                            <SolidColorBrush Color="#0056B3" Opacity="0.2"/>
+                        </Setter.Value>
+                    </Setter>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -50,18 +52,40 @@
 
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="210"/>
+            <ColumnDefinition Width="3"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <Grid Grid.Row="0" Grid.ColumnSpan="2" Background="#2D2D2D" MouseLeftButtonDown="HeaderGrid_MouseLeftButtonDown">
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button Content="Свернуть" Click="MinimizeButton_Click" Style="{StaticResource NavButtonStyle}" Width="80" Height="30"/>
-                <Button Content="Выход" Click="ExitButton_Click" Style="{StaticResource NavButtonStyle}" Width="80" Height="30"/>
+        <Grid Grid.Row="0" Grid.Column="0" Background="#EAEAEA" MouseLeftButtonDown="HeaderGrid_MouseLeftButtonDown">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="10,0,0,0">
+                <TextBlock Text="DefLink " VerticalAlignment="Center" FontSize="16" FontWeight="Regular" Foreground="#004094"/>
+                <TextBlock Text="VPN" VerticalAlignment="Center" FontSize="16" FontWeight="SemiBold" Foreground="#0056B3"/>
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="1" Grid.Column="0" x:Name="LeftPanelGrid">
-            <Grid Background="#2D2D2D">
+        <Grid Grid.RowSpan="2" Grid.Column="1" Background="#D3D3D3" MouseLeftButtonDown="HeaderGrid_MouseLeftButtonDown">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="0" Grid.Column="2" Background="#F9F9F9" MouseLeftButtonDown="HeaderGrid_MouseLeftButtonDown">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Click="MinimizeButton_Click" Style="{StaticResource NavButtonStyle}" Width="50" Height="30">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="WindowMinimize" Width="20" Height="20" Margin="15,0,0,0"/>
+                    </Button.Content>
+                </Button>
+                <Button Click="ExitButton_Click" Style="{StaticResource NavButtonStyle}" Width="50" Height="30">
+                    <Button.Content>
+                        <materialDesign:PackIcon Kind="Close" Width="20" Height="20" Margin="15,0,0,0"/>
+                    </Button.Content>
+                </Button>
+            </StackPanel>
+        </Grid>
+
+
+        <Grid Grid.Row="1" Grid.Column="0" x:Name="LeftPanelGrid" Background="#EAEAEA">
+            <Grid Background="#EAEAEA">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
@@ -69,15 +93,51 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Row="0">
-                    <Button Content="Главная" Style="{StaticResource NavButtonStyle}" Click="Dashboard_Click"/>
-                    <Button Content="Настройки" Style="{StaticResource NavButtonStyle}" Click="Settings_Click"/>
-                    <Button Content="Аккаунт и подписка" Style="{StaticResource NavButtonStyle}" Click="Account_Click"/>
+                    <Button Style="{StaticResource NavButtonStyle}" Click="Dashboard_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <materialDesign:PackIcon Kind="Home" Width="24" Height="24" Margin="10,0,10,0"/>
+                                    <TextBlock Text="Главная" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <Button Style="{StaticResource NavButtonStyle}" Click="Settings_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <materialDesign:PackIcon Kind="Settings" Width="24" Height="24" Margin="10,0,10,0"/>
+                                    <TextBlock Text="Настройки" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
+                    <Button Style="{StaticResource NavButtonStyle}" Click="Account_Click">
+                        <Button.ContentTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                    <materialDesign:PackIcon Kind="Account" Width="24" Height="24" Margin="10,0,10,0"/>
+                                    <TextBlock Text="Профиль" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </Button.ContentTemplate>
+                    </Button>
                 </StackPanel>
 
-                <Button Content="Сервера" Style="{StaticResource NavButtonStyle}" Click="Servers_Click" Grid.Row="2"/>
+                <Button Style="{StaticResource NavButtonStyle}" Click="Servers_Click" Grid.Row="2">
+                    <Button.ContentTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+                                <materialDesign:PackIcon Kind="Server" Width="24" Height="24" Margin="10,0,10,0"/>
+                                <TextBlock Text="Сервера" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </Button.ContentTemplate>
+                </Button>
             </Grid>
         </Grid>
 
-        <Frame x:Name="ContentFrame" Grid.Row="1" Grid.Column="1" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="ContentFrame" Grid.Row="1" Grid.Column="2" NavigationUIVisibility="Hidden" Background="#FFFFFF"/>
     </Grid>
 </Window>

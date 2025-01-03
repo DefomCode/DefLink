@@ -1,18 +1,23 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 
 namespace DefLink
 {
     public partial class MainWindow : Window
     {
         private DatabaseManager dbManager;
+        private Dictionary<string, Page> cachedPages;
 
         public MainWindow()
         {
             InitializeComponent();
             dbManager = new DatabaseManager("Server=DESKTOP-K3IPTFJ;Database=DefLink;Trusted_Connection=True;");
+            cachedPages = new Dictionary<string, Page>();
             CheckLogin(); // Проверка авторизации
             this.Icon = new BitmapImage(new Uri("pack://application:,,,/Images/DefLink.ico"));
             this.StateChanged += MainWindow_StateChanged;
@@ -48,15 +53,14 @@ namespace DefLink
                 UpdateUserSettings();
 
                 // Загружаем главную страницу
-                LoadDashboard();
+                NavigateToPage("DashboardPage");
             }
             else
             {
-                ContentFrame.Navigate(new RegisterPage()); // Если не вошел, переходим на страницу регистрации
+                NavigateToPage("RegisterPage"); // Если не вошел, переходим на страницу регистрации
             }
         }
 
-        // Новый метод для обновления данных пользователя
         private void UpdateUserSettings()
         {
             int ID_User = Properties.Settings.Default.ID_User; // Получаем ID пользователя из настроек
@@ -76,16 +80,40 @@ namespace DefLink
             Properties.Settings.Default.Save();
         }
 
-        private void LoadDashboard()
+        private void NavigateToPage(string pageKey)
         {
-            ContentFrame.Navigate(new DashboardPage());
+            if (!cachedPages.ContainsKey(pageKey))
+            {
+                // Создаем страницу и добавляем в кэш
+                switch (pageKey)
+                {
+                    case "DashboardPage":
+                        cachedPages[pageKey] = new DashboardPage();
+                        break;
+                    case "RegisterPage":
+                        cachedPages[pageKey] = new RegisterPage();
+                        break;
+                    case "SettingsPage":
+                        cachedPages[pageKey] = new SettingsPage();
+                        break;
+                    case "ServersPage":
+                        cachedPages[pageKey] = new ServersPage();
+                        break;
+                    case "AccountPage":
+                        cachedPages[pageKey] = new AccountPage();
+                        break;
+                }
+            }
+
+            // Устанавливаем страницу из кэша
+            ContentFrame.Navigate(cachedPages[pageKey]);
         }
 
-        private void Dashboard_Click(object sender, RoutedEventArgs e) => LoadDashboard();
+        private void Dashboard_Click(object sender, RoutedEventArgs e) => NavigateToPage("DashboardPage");
 
-        private void Settings_Click(object sender, RoutedEventArgs e) => ContentFrame.Navigate(new SettingsPage());
+        private void Settings_Click(object sender, RoutedEventArgs e) => NavigateToPage("SettingsPage");
 
-        private void Servers_Click(object sender, RoutedEventArgs e) => ContentFrame.Navigate(new ServersPage());
+        private void Servers_Click(object sender, RoutedEventArgs e) => NavigateToPage("ServersPage");
 
         private void Account_Click(object sender, RoutedEventArgs e)
         {
@@ -93,12 +121,12 @@ namespace DefLink
             if (Properties.Settings.Default.IsLoggedIn)
             {
                 // Если пользователь вошел, открываем страницу аккаунта
-                ContentFrame.Navigate(new AccountPage());
+                NavigateToPage("AccountPage");
             }
             else
             {
                 // Если не вошел, открываем страницу регистрации
-                ContentFrame.Navigate(new RegisterPage());
+                NavigateToPage("RegisterPage");
             }
         }
 
