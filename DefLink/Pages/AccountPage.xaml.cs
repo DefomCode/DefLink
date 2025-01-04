@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Navigation; // Убедитесь, что этот using существует
 
 namespace DefLink
@@ -28,6 +29,7 @@ namespace DefLink
             }
         }
 
+
         private void LogoutButton_Click(object sender, RoutedEventArgs e)
         {
             // Очищаем данные о пользователе
@@ -47,10 +49,6 @@ namespace DefLink
             // Перенаправляем на страницу входа
             NavigationService.Navigate(new LoginPage());
         }
-
-
-
-
 
     }
 }

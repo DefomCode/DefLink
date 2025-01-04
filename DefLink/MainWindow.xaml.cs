@@ -138,8 +138,10 @@ namespace DefLink
         private void ExitButton_Click(object sender, RoutedEventArgs e)
         {
             // Сохранение всех настроек, включая данные аккаунта
+            cachedPages.Clear(); // Очистка кэша страниц
             Properties.Settings.Default.Save(); // Сохраните изменения
             Application.Current.Shutdown(); // Завершение приложения
+
         }
 
         private void HeaderGrid_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)

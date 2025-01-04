@@ -1,8 +1,8 @@
 ﻿<Page x:Class="DefLink.DashboardPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-      Title="DashboardPage">
-    <Grid Height="660" Width="640" Background="#F9F9F9">
+      Title="DashboardPage" Height="660" Width="640">
+    <Grid Background="#F9F9F9">
         <TextBlock Text="Главная" Foreground="#0056B3" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="24"/>
         <Button Content="Подключиться к VPN" Click="ConnectToVpnButton_Click" Width="60" Height="60"/>
         <TextBlock x:Name="ConnectionStatusText" Text="Статус: Отключено" HorizontalAlignment="Center" VerticalAlignment="Bottom"/>
