@@ -4,10 +4,10 @@
       Title="Account" Height="660" Width="640">
     <Grid Background="#F9F9F9">
         <StackPanel>
-            
+            <TextBlock x:Name="UserNameTextBlock" Text="Loading..." FontSize="20" Margin="10,50,0,10" HorizontalAlignment="Left"/>
+            <!-- Отображение никнейма пользователя -->
         </StackPanel>
         <TextBlock Text="Аккаунт" Foreground="Black" VerticalAlignment="Top" HorizontalAlignment="Center" FontSize="24"/>
         <Button Height="20" Width="50" Content="Выйти" Click="LogoutButton_Click" Margin="128,136,22,44"/>
     </Grid>
 </Page>
-

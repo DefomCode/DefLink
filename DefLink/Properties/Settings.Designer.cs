@@ -37,7 +37,6 @@ namespace DefLink.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("9")]
         public int ID_User {
             get {
                 return ((int)(this["ID_User"]));

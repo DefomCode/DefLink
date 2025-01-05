@@ -120,7 +120,6 @@ namespace DefLink
             }
         }
 
-        // Метод для получения данных пользователя по его ID
         public UserData GetUserDataById(int ID_User)
         {
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -128,11 +127,11 @@ namespace DefLink
                 connection.Open();
 
                 string query = @"
-            SELECT s.ID_Subscription, v.UUID, v.ServerAddress, v.PublicKey, v.Label, u.Login
-            FROM [User] u
-            LEFT JOIN Subscription s ON u.ID_User = s.ID_User
-            LEFT JOIN VPN v ON s.ID_Subscription = v.ID_Subscription
-            WHERE u.ID_User = @ID_User";
+        SELECT s.ID_Subscription, v.UUID, v.ServerAddress, v.PublicKey, v.Label, u.Login
+        FROM [User] u
+        LEFT JOIN Subscription s ON u.ID_User = s.ID_User
+        LEFT JOIN VPN v ON s.ID_Subscription = v.ID_Subscription
+        WHERE u.ID_User = @ID_User";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
@@ -154,12 +153,55 @@ namespace DefLink
                         }
                         else
                         {
-                            // Если данных нет, например, нет подписки или пользователя, возвращаем null
-                            return null;
+                            return null; // Если пользователь не найден
                         }
                     }
                 }
             }
+        }
+
+
+
+        public string GetUserNameById(int userId)
+        {
+            string userName = string.Empty;
+
+            try
+            {
+                string query = "SELECT Login FROM User WHERE ID_User = @ID_User";  // Запрос к базе данных
+
+                Console.WriteLine("Запрос: " + query);  // Логируем запрос
+
+                using (var connection = new SqlConnection(connectionString))
+                {
+                    connection.Open();
+                    using (var command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@ID_User", userId);  // Привязка параметра
+                        var result = command.ExecuteScalar();  // Выполнение запроса
+
+                        // Логируем результат
+                        Console.WriteLine("Результат запроса: " + (result == null ? "null" : result.ToString()));
+
+                        if (result != null)
+                        {
+                            userName = result.ToString();  // Если результат не null, присваиваем значение
+                        }
+                        else
+                        {
+                            Console.WriteLine("Пользователь с ID " + userId + " не найден.");
+                            userName = "Пользователь не найден";  // Если результат пустой
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Ошибка при получении имени пользователя: " + ex.Message);
+                userName = "Ошибка при загрузке данных";
+            }
+
+            return userName;
         }
 
 

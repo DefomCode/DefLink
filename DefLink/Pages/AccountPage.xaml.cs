@@ -27,7 +27,46 @@ namespace DefLink
             {
                 NavigationService.Navigate(new LoginPage());
             }
+            LoadUserData();
         }
+
+        private void LoadUserData()
+        {
+            try
+            {
+                // Получаем ID пользователя из настроек
+                int userId = Properties.Settings.Default.ID_User;
+
+                // Проверка на случай, если ID_User не установлен (например, 0 или не найден)
+                if (userId == 0)
+                {
+                    UserNameTextBlock.Text = "Пользователь не найден";
+                    return;
+                }
+
+                // Получаем данные пользователя из базы
+                UserData userData = dbManager.GetUserDataById(userId);
+
+                // Проверяем, если данные пользователя не найдены
+                if (userData != null)
+                {
+                    // Отображаем логин пользователя
+                    UserNameTextBlock.Text = userData.Login;
+                }
+                else
+                {
+                    UserNameTextBlock.Text = "Ошибка загрузки данных";
+                }
+            }
+            catch (Exception ex)
+            {
+                // Логируем ошибку
+                Console.WriteLine("Ошибка: " + ex.Message);
+                UserNameTextBlock.Text = "Ошибка при загрузке данных";
+            }
+        }
+
+
 
 
         private void LogoutButton_Click(object sender, RoutedEventArgs e)

@@ -6,7 +6,7 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ID_User" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">9</Value>
+      <Value Profile="(Default)" />
     </Setting>
     <Setting Name="Login" Type="System.String" Scope="User">
       <Value Profile="(Default)">""</Value>
